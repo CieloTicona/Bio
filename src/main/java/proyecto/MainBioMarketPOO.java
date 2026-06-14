@@ -38,7 +38,7 @@ public class MainBioMarketPOO {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 // Instanciamos tu ventana JDialog pasándole un Frame vacío
-                RegistrarProducto ventana = new RegistrarProducto(new javax.swing.JFrame(), true);
+                RegistrarProductos ventana = new RegistrarProductos(new javax.swing.JFrame(), true);
                 ventana.setLocationRelativeTo(null); // Centra la ventana en la pantalla
                 ventana.setVisible(true); // La hace visible
             }
