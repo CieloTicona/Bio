@@ -9,6 +9,9 @@ package vista;
  * @author HP
  */
 public class RegistrarProductos extends javax.swing.JDialog {
+    private proyecto.Inventario I1;
+    private final String ARCHIVO_DATOS = "datos_biomarket.dat";
+   
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegistrarProductos.class.getName());
 
@@ -18,6 +21,31 @@ public class RegistrarProductos extends javax.swing.JDialog {
     public RegistrarProductos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        // PEGA ESTO AQUÍ ADENTRO:
+        I1 = proyecto.Inventario.recuperarDatos(ARCHIVO_DATOS);
+        if (I1 == null) {
+            I1 = new proyecto.Inventario(0, "Lunes");
+        }
+        actualizarTabla();
+    }
+    public void actualizarTabla() {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) TablaProductos.getModel();
+        modelo.setRowCount(0);
+        if (I1 != null && I1.getP() != null) {
+            for (int i = 0; i < I1.getCantProd(); i++) {
+                proyecto.Producto prod = I1.getP()[i];
+                if (prod != null && !prod.getNombre().equals("")) {
+                    Object[] fila = new Object[4];
+                    fila[0] = (i + 1);                  
+                    fila[1] = prod.getNombre();        
+                    fila[2] = prod.getCantidad();    
+                    fila[3] = prod.getPrecio() + " Bs"; 
+
+                    modelo.addRow(fila);
+                }
+            }
+        }
     }
 
     /**
@@ -30,16 +58,16 @@ public class RegistrarProductos extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
+        btGUARDAR = new javax.swing.JButton();
+        btCERRAR = new javax.swing.JButton();
+        btACTUALIZAR = new javax.swing.JButton();
+        txtID = new javax.swing.JTextField();
+        txtNOMBRE = new javax.swing.JTextField();
+        txtORIGEN = new javax.swing.JTextField();
+        txtPRECIO = new javax.swing.JTextField();
+        txtCANTIDAD = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaProductos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(51, 51, 51));
@@ -47,31 +75,31 @@ public class RegistrarProductos extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(0, 51, 0));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Registrar Productos", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 1, 14), new java.awt.Color(153, 0, 153))); // NOI18N
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 153));
-        jButton1.setText("Guardar");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        btGUARDAR.setBackground(new java.awt.Color(255, 255, 153));
+        btGUARDAR.setText("Guardar");
+        btGUARDAR.addActionListener(this::btGUARDARActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 204));
-        jButton2.setText("Cerrar");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        btCERRAR.setBackground(new java.awt.Color(255, 255, 204));
+        btCERRAR.setText("Cerrar");
+        btCERRAR.addActionListener(this::btCERRARActionPerformed);
 
-        jButton3.setBackground(new java.awt.Color(255, 255, 153));
-        jButton3.setText("Actualizar");
+        btACTUALIZAR.setBackground(new java.awt.Color(255, 255, 153));
+        btACTUALIZAR.setText("Actualizar");
 
-        jTextField1.setBackground(new java.awt.Color(51, 102, 0));
-        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ID", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        txtID.setBackground(new java.awt.Color(51, 102, 0));
+        txtID.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ID", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        jTextField2.setBackground(new java.awt.Color(51, 102, 0));
-        jTextField2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Nombre", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        txtNOMBRE.setBackground(new java.awt.Color(51, 102, 0));
+        txtNOMBRE.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Nombre", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        jTextField3.setBackground(new java.awt.Color(51, 102, 0));
-        jTextField3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Origen", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        txtORIGEN.setBackground(new java.awt.Color(51, 102, 0));
+        txtORIGEN.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Origen", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        jTextField4.setBackground(new java.awt.Color(51, 102, 0));
-        jTextField4.setBorder(javax.swing.BorderFactory.createTitledBorder("Precio por Unidad"));
+        txtPRECIO.setBackground(new java.awt.Color(51, 102, 0));
+        txtPRECIO.setBorder(javax.swing.BorderFactory.createTitledBorder("Precio por Unidad"));
 
-        jTextField5.setBackground(new java.awt.Color(51, 102, 0));
-        jTextField5.setBorder(javax.swing.BorderFactory.createTitledBorder("Cantidad"));
+        txtCANTIDAD.setBackground(new java.awt.Color(51, 102, 0));
+        txtCANTIDAD.setBorder(javax.swing.BorderFactory.createTitledBorder("Cantidad"));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -79,49 +107,49 @@ public class RegistrarProductos extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(95, 95, 95)
-                .addComponent(jButton2)
+                .addComponent(btCERRAR)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jButton1)
+                .addComponent(btGUARDAR)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addComponent(btACTUALIZAR)
                 .addGap(38, 38, 38))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2)
-                    .addComponent(jTextField1))
+                    .addComponent(txtORIGEN, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtPRECIO, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCANTIDAD, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtNOMBRE)
+                    .addComponent(txtID))
                 .addGap(17, 17, 17))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNOMBRE, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtCANTIDAD, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPRECIO, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtORIGEN, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
+                    .addComponent(btGUARDAR)
+                    .addComponent(btACTUALIZAR))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addComponent(btCERRAR)
                 .addGap(41, 41, 41))
         );
 
-        jTable1.setBackground(new java.awt.Color(153, 153, 0));
-        jTable1.setForeground(new java.awt.Color(0, 51, 0));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaProductos.setBackground(new java.awt.Color(153, 153, 0));
+        TablaProductos.setForeground(new java.awt.Color(0, 51, 0));
+        TablaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -132,7 +160,7 @@ public class RegistrarProductos extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TablaProductos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -158,13 +186,32 @@ public class RegistrarProductos extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btGUARDARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGUARDARActionPerformed
+        try {
+            String nombre = txtNOMBRE.getText();
+            int cantidad = Integer.parseInt(txtCANTIDAD.getText());
+            float precio = Float.parseFloat(txtPRECIO.getText());
+            
+            proyecto.Producto nuevo = new proyecto.Producto(nombre, "Orgánico", "Cota-Cota", precio, cantidad);
+            I1.agregarProducto(nuevo);
+            I1.persistirDatos(ARCHIVO_DATOS);
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+            actualizarTabla();
+            txtID.setText("");
+            txtNOMBRE.setText("");
+            txtCANTIDAD.setText("");
+            txtPRECIO.setText("");
+            txtORIGEN.setText("");
+
+            javax.swing.JOptionPane.showMessageDialog(this, "¡Producto guardado y persistido con éxito!");
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor revisa los datos ingresados.");
+        }
+    }//GEN-LAST:event_btGUARDARActionPerformed
+
+    private void btCERRARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCERRARActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btCERRARActionPerformed
 
     /**
      * @param args the command line arguments
@@ -204,16 +251,16 @@ public class RegistrarProductos extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JTable TablaProductos;
+    private javax.swing.JButton btACTUALIZAR;
+    private javax.swing.JButton btCERRAR;
+    private javax.swing.JButton btGUARDAR;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField txtCANTIDAD;
+    private javax.swing.JTextField txtID;
+    private javax.swing.JTextField txtNOMBRE;
+    private javax.swing.JTextField txtORIGEN;
+    private javax.swing.JTextField txtPRECIO;
     // End of variables declaration//GEN-END:variables
 }
