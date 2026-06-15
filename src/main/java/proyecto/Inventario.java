@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author HP
  */
 public class Inventario implements Serializable {
-
+    private static final long serialVersionUID = 1L;
     private int cantProd;
     private String fecha;
     private Producto[] p = new Producto[100];
