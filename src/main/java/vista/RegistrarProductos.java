@@ -7,6 +7,7 @@ package vista;
 import proyecto.Inventario;
 import proyecto.Producto;
 import vista.SeleccionMercado;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -78,6 +79,8 @@ public class RegistrarProductos extends javax.swing.JDialog {
         TablaProductos = new javax.swing.JTable();
         ELIMINAR = new javax.swing.JButton();
         LISTA = new javax.swing.JButton();
+        valor = new javax.swing.JButton();
+        buscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(51, 51, 51));
@@ -188,6 +191,16 @@ public class RegistrarProductos extends javax.swing.JDialog {
         LISTA.setText("Listar Por Dia");
         LISTA.addActionListener(this::LISTAActionPerformed);
 
+        valor.setBackground(new java.awt.Color(255, 255, 204));
+        valor.setFont(new java.awt.Font("Segoe UI Emoji", 1, 14)); // NOI18N
+        valor.setText("Valor Total Inv.");
+        valor.addActionListener(this::valorActionPerformed);
+
+        buscar.setBackground(new java.awt.Color(255, 255, 204));
+        buscar.setFont(new java.awt.Font("Segoe UI Emoji", 1, 14)); // NOI18N
+        buscar.setText("Buscar Producto");
+        buscar.addActionListener(this::buscarActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -200,7 +213,9 @@ public class RegistrarProductos extends javax.swing.JDialog {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(ELIMINAR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(LISTA, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(LISTA, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(valor, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(47, 47, 47))
         );
         layout.setVerticalGroup(
@@ -214,6 +229,10 @@ public class RegistrarProductos extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(LISTA, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(valor, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ELIMINAR)
                 .addGap(52, 52, 52))
@@ -250,25 +269,33 @@ public class RegistrarProductos extends javax.swing.JDialog {
 
     private void btCERRARActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
+        int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "¿Desea salir de esta ventana?",
+                "Confirmar",
+                javax.swing.JOptionPane.YES_NO_OPTION
+        );
+        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+            dispose();
+            SeleccionMercado ventana = new SeleccionMercado();
+            ventana.setLocationRelativeTo(null);
+            ventana.setVisible(true);
+        }
     }                                        
 
     private void ELIMINARActionPerformed(java.awt.event.ActionEvent evt) {                                         
         int filaSeleccionada = TablaProductos.getSelectedRow();
-
         if (filaSeleccionada == -1) {
             javax.swing.JOptionPane.showMessageDialog(this, "Por favor selecciona un producto de la tabla para eliminar");
             return;
         }
-
         String nombreProducto = TablaProductos.getValueAt(filaSeleccionada, 1).toString();
         int confirmar = javax.swing.JOptionPane.showConfirmDialog(this,
                 "¿Estás segura de eliminar " + nombreProducto + " del BioMarket?", "Confirmar Eliminación", javax.swing.JOptionPane.YES_NO_OPTION);
-
         if (confirmar == javax.swing.JOptionPane.YES_OPTION) {
             I1.quitarProducto(nombreProducto);
             I1.persistirDatos(ARCHIVO_DATOS);
             actualizarTabla();
-
             javax.swing.JOptionPane.showMessageDialog(this, "Producto eliminado y actualizado en el archivo");
         }
     }                                        
@@ -310,7 +337,6 @@ public class RegistrarProductos extends javax.swing.JDialog {
             if (!hayMartes) {
                 reporteFinal += "   (No hay productos registrados para el Martes)\n";
             }
-
             reporteFinal += "\n----------------------------------------------------------------------\n";
             System.out.println("---------------------------------------");
             I1.listarPorDia("Viernes");
@@ -326,20 +352,46 @@ public class RegistrarProductos extends javax.swing.JDialog {
             if (!hayViernes) {
                 reporteFinal += "   (No hay productos registrados para el Viernes)\n";
             }
-
             javax.swing.JTextArea areaTexto = new javax.swing.JTextArea(reporteFinal);
             areaTexto.setEditable(false);
             javax.swing.JScrollPane scroll = new javax.swing.JScrollPane(areaTexto);
             scroll.setPreferredSize(new java.awt.Dimension(400, 300));
             javax.swing.JOptionPane.showMessageDialog(this, scroll, "Reporte de Inventario Detallado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
             System.out.println("=======================================\n");
-
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "El inventario está completamente vacío.");
         }
-
     }                                     
+
+    private void valorActionPerformed(java.awt.event.ActionEvent evt) {                                      
+        // TODO add your handling code here:
+        float total = I1.calcularValorInventario();
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                String.format("Valor total del inventario disponible:\n%.2f Bs", total),
+                "Reporte de Inventario",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+    }                                     
+
+    private void buscarActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        // TODO add your handling code here:
+        String nombre = JOptionPane.showInputDialog(
+                this,
+                "Ingrese el nombre del producto:"
+        );
+        if (I1.buscarProducto(nombre)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El producto sí existe en el inventario."
+            );
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El producto NO existe en el inventario."
+            );
+        }
+    }                                      
 
     /**
      * @param args the command line arguments
@@ -386,6 +438,7 @@ public class RegistrarProductos extends javax.swing.JDialog {
     private javax.swing.JButton btACTUALIZAR;
     private javax.swing.JButton btCERRAR;
     private javax.swing.JButton btGUARDAR;
+    private javax.swing.JButton buscar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField txtCANTIDAD;
@@ -393,5 +446,6 @@ public class RegistrarProductos extends javax.swing.JDialog {
     private javax.swing.JTextField txtNOMBRE;
     private javax.swing.JTextField txtORIGEN;
     private javax.swing.JTextField txtPRECIO;
+    private javax.swing.JButton valor;
     // End of variables declaration                   
 }
