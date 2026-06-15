@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  * @author HP
  */
 public class RegistrarProductos extends javax.swing.JDialog {
-
+    private static final long serialVersionUID = 1L;
     private proyecto.Inventario I1;
     private final String ARCHIVO_DATOS;
 
@@ -309,9 +309,6 @@ public class RegistrarProductos extends javax.swing.JDialog {
         txtCANTIDAD.setText("");
         txtPRECIO.setText("");
         txtORIGEN.setText("");
-        // Si tienes una cajita para el origen (ej. txtORIGEN), lo limpias aquí también:
-        // txtORIGEN.setText("");
-
         javax.swing.JOptionPane.showMessageDialog(this, "interfaz actualizada con exito");
     }                                            
 
