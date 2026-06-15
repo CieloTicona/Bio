@@ -4,19 +4,18 @@
  */
 package proyecto;
 
-
-import vista.RegistrarProductos;
+import vista.SeleccionMercado;
 
 public class MainBioMarketPOO {
 
     public static void main(String[] args) {
-        
+
         String archivoDatos = "datos_biomarket.dat";
-        
+
         System.out.println("=== INICIANDO SISTEMA BIOMARKET UMSA ===");
-        
+
         Inventario I1 = Inventario.recuperarDatos(archivoDatos);
-       
+
         if (I1 == null) {
             System.out.println("No se encontró archivo previo. Creando inventario inicial para el Mercado...");
             I1 = new Inventario(0, "Lunes"); // Al pasarle 0, no te pedirá nada por consola
@@ -26,17 +25,16 @@ public class MainBioMarketPOO {
 
         PuntoDeVenta PV = new PuntoDeVenta("BioMarket - Monoblock UMSA", I1);
         PV.abrirPuntoDeVenta();
-        
+
         System.out.println("\nINVENTARIO ACTUAL EN MEMORIA:");
-        I1.mostrar(); 
+        I1.mostrar();
 
         System.out.println("\nAbriendo entorno gráfico...");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-        
-                RegistrarProductos ventana = new RegistrarProductos(new javax.swing.JFrame(), true);
-                ventana.setLocationRelativeTo(null); // Centra la ventana en la pantalla
-                ventana.setVisible(true); // La hace visible
+                SeleccionMercado ventana = new SeleccionMercado();
+                ventana.setLocationRelativeTo(null);
+                ventana.setVisible(true);
             }
         });
     }
