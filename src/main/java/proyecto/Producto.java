@@ -9,6 +9,7 @@ import java.io.Serializable;
  * @author HP
  */
 public class Producto implements Serializable {
+    private static final long serialVersionUID = 1L;
 private String nombre, tipo, lugarOrigen;
 	private Float precio;
 	private int cantidad;
