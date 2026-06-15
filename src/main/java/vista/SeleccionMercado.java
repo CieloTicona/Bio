@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
  * @author BEBIS
  */
 public class SeleccionMercado extends javax.swing.JFrame {
+    private static final long serialVersionUID = 1L;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SeleccionMercado.class.getName());
     private ButtonGroup grupoMercados;
     /**
